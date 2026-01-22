@@ -114,6 +114,32 @@
             </tbody>
         </table>
     </div>
+    <input type="file" id="snippet-import-input" accept="text/csv" style="display: none">
+    <label type="button" class="w3-btn w3-left w3-margin-bottom button1" for="snippet-import-input"><span class="fa fa-upload"></span> {% trans 'Import' %}</label>
+    <div class="fa fa-question-circle expandingQuestionMark"
+            onmouseover="document.getElementById('tt2').style.display='block'"
+            onmouseout="document.getElementById('tt2').style.display='none'"
+            style="margin-left: 5px;">
+        <div id="tt2">
+            {% blocktrans %}
+                <p>Import snippets from a spreadsheet on your computer. Remember that after you import snippets, you have to save them.</p>
+                <p>The spreadsheet must have been saved as a CSV file and is expected to be laid out as follows:</p>
+                <ol>
+                    <li>Starting hour</li>
+                    <li>Starting minute</li>
+                    <li>Starting second</li>
+                    <li>Snippet name</li>
+                    <li>Is this snippet optional?<br>
+                        ("1", "true", "yes", or "y" for yes,<br>
+                        anything else or blank cell for no)</li>
+                    <li>Ending hour</li>
+                    <li>Ending minute</li>
+                    <li>Ending second</li>
+                </ol>
+                <p>Note that the first row is assumed to be a header row and will be ignored.</p>
+            {% endblocktrans %}
+        </div>
+    </div>
     <button type="button" style="display: none" class="w3-btn w3-right w3-margin-bottom button1 save"><span class="fa fa-save"></span> {% trans 'Save' %}</button>
 </div>
 <script type="text/javascript">
@@ -127,4 +153,5 @@
         ap.draw_snippets();
     });
 </script>
+<script type="text/javascript" src="{% static 'palanaeum/js/snippet_import.js' %}?v={{ VERSION_TAG }}"></script>
 {% endblock %}
