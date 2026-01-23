@@ -16,6 +16,7 @@ async function handle_snippet_import(event) {
 			noty({ text: 'Snippet import cancelled.', type: 'information' });
 			return;
 		}
+		noty({ text: 'Snippets importing. (This might take a minute!)', type: 'information' });
 
 		const text = await file.text();
 		const csv = parse_csv_from_string(text);
@@ -28,7 +29,10 @@ async function handle_snippet_import(event) {
 
 	const player = AudioPlayer.get_instance();
 	const source_id = player.get_source_id();
+
+	window.unsaved_changes = true;
 	$('.save').show();
+
 	for (const snippet of snippets) {
 		snippet.db_id = await get_next_snippet_id(source_id);
 		player.append_snippet(snippet);
@@ -89,9 +93,12 @@ function parse_snippet_from_table_row(row) {
 	const end_seconds = Number(row[7]);
 	const end_time = (end_hours * 60 * 60) + (end_minutes * 60) + end_seconds;
 
-	const snippet = new Snippet(start_time, end_time);
-	snippet.comment = comment;
-	snippet.optional = optional;
+	const snippet = Object.assign(new Snippet(), {
+		start_time,
+		end_time,
+		comment,
+		optional,
+	});
 
 	return snippet;
 }
