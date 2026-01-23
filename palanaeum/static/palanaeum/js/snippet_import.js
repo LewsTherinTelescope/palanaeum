@@ -27,8 +27,12 @@ async function handle_snippet_import(event) {
 	}
 
 	const player = AudioPlayer.get_instance();
+	const source_id = player.get_source_id();
 	$('.save').show();
-	snippets.forEach(snippet => player.append_snippet(snippet));
+	for (const snippet of snippets) {
+		snippet.db_id = await get_next_snippet_id(source_id);
+		player.append_snippet(snippet);
+	};
 	player.draw_snippets();
 	noty({ text: 'Snippets imported!', type: 'success' });
 }
@@ -90,4 +94,13 @@ function parse_snippet_from_table_row(row) {
 	snippet.optional = optional;
 
 	return snippet;
+}
+
+async function get_next_snippet_id(source_id) {
+	const ret = await $.post(Palanaeum.SNIPPET_CREATE_URL, { source_id });
+	if (ret['success']) {
+		return ret['snippet_id'];
+	} else {
+		throw ret['reason'];
+	}
 }
